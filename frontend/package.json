@@ -1,0 +1,55 @@
+{
+  "name": "moneyday",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "webpack --watch --mode development",
+    "dev": "webpack-dev-server --mode development",
+    "build": "webpack --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "./actions/package.sh",
+    "push": "./actions/push.sh",
+    "serve": "npm run watch && serve -p 3000 -s",
+    "prettier": "prettier --config ./.prettierrc  --write 'src/**/*.{ts,tsx}'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KiranGopalakrishnan/projctor.git"
+  },
+  "author": "Kiran Gopalakrishnan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KiranGopalakrishnan/projctor/issues"
+  },
+  "homepage": "https://github.com/KiranGopalakrishnan/projctor#readme",
+  "devDependencies": {
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "html-webpack-plugin": "4.3.0",
+    "source-map-loader": "^0.2.4",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
+  },
+  "dependencies": {
+    "@types/react-router-dom": "5.1.5",
+    "@types/styled-components": "5.1.0",
+    "axios": "0.19.2",
+    "monday-sdk-js": "0.1.0",
+    "prettier": "2.0.5",
+    "react": "^16.12.0",
+    "react-avatar": "3.9.7",
+    "react-dom": "^16.12.0",
+    "react-hot-loader": "4.12.21",
+    "react-router-dom": "5.2.0",
+    "react-select": "3.1.0",
+    "react-spinners": "0.9.0",
+    "react-switch": "5.0.1",
+    "serve": "11.3.1",
+    "styled-components": "5.1.1"
+  },
+  "proxy": "http://localhost:8080"
+}
