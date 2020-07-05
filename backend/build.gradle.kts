@@ -49,15 +49,14 @@ tasks.withType<KotlinCompile> {
 	}
 }
 
-tasks.register("package") { 
-	dependsOn("build")
-	exec {
-		executable("./actions/package.sh")
-	}
-}
-
-tasks.register("push") { 
-    exec {
-		executable("./actions/push.sh")
-	}
-}
+//tasks.register("package") {
+//	exec {
+//		executable("./actions/package.sh")
+//	}
+//}
+//
+//tasks.register("push") {
+//    exec {
+//		executable("./actions/push.sh")
+//	}
+//}

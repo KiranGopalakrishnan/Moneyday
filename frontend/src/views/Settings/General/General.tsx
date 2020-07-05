@@ -6,6 +6,10 @@ import {Spinner} from '../../../common/components/Spinner/Spinner';
 import { colors } from '../../../common/Colors';
 import { InputBox } from '../../../common/components/InputBox/InputBox';
 import Switch from 'react-switch';
+import { Select } from '../../../common/components/Select/Select';
+import { useBoards } from '../../../reducers/BoardsReducer';
+import { getAllColumnsForBoard, getAllTimeRecords } from '../../../services/Boards';
+import { Board } from '../../../types';
 
 const Container = styled(FlexContainer)`
     padding: 32px;
@@ -33,6 +37,7 @@ const Control = styled.div`
     height: 58px;
     justify-content: center;
     box-sizing: border-box;
+    width: ${({width}:{width: number})=> width}px;
 `;
 
 const SettingRow = styled(Row)`
@@ -42,14 +47,23 @@ const SettingRow = styled(Row)`
 
 const General: React.FC = () => {
 
+    const [{currentBoard}] = useBoards();
     const [timetracking,setTimetracking] =  React.useState(false);
+    const [columns,setColumns] =  React.useState([]);
+
+    React.useEffect(()=>{
+        getAllTimeRecords(currentBoard.id).then(console.error);
+        getAllColumnsForBoard(currentBoard.id).then(({boards}:{boards:Board[]})=>{
+            setColumns(boards[0].columns);
+        });
+    },[]);
 
     return (
         <Container>
             <Section>
                 <SettingRow>
                     <Label>Budget</Label>
-                    <Control>
+                    <Control width={300}>
                         <InputBox
                             value={undefined}
                             onChange={console.error}
@@ -61,12 +75,18 @@ const General: React.FC = () => {
                 </SettingRow>
                 <SettingRow>
                     <Label>Integrate with time tracking</Label>
-                    <Control>
+                    <Control width={100}>
                         <Switch
                             onChange={() => setTimetracking(!timetracking)}
                             checked={timetracking}
                             height={24}
                         />
+                    </Control>
+                </SettingRow>
+                <SettingRow>
+                    <Label>Select column to track time from</Label>
+                    <Control width={300}>
+                        <Select options={columns.map(column => ({value:column.id,label: column.title}))} onChange={console.error} width={300} />
                     </Control>
                 </SettingRow>
             </Section>
