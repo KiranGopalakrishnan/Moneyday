@@ -9,4 +9,28 @@ id name photo_tiny
 } } }`);
 };
 
-export {getAllBoards};
+
+const getAllColumnsForBoard = (boardId: string) => {
+    return new Monday().api(`query {
+boards (ids: ${boardId}) {
+columns {
+id
+title
+type
+}
+}
+}`)
+}
+
+const getAllTimeRecords = (boardId: string) =>
+    new Monday().api(`{
+  items {
+    column_values(ids: "time_tracking") {
+      id
+      value
+      additional_info
+    }
+  }
+}
+`);
+export {getAllBoards, getAllColumnsForBoard, getAllTimeRecords};
