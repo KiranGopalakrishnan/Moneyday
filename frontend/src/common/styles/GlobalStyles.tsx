@@ -2,9 +2,10 @@ import * as React from 'react';
 import {createGlobalStyle} from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;1,200;1,300&display=swap');
-   html{
-        font-family: 'Titillium Web';
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap');
+  html{
+        font-family: 'Roboto', sans-serif;
+        font-weight: 100;
     }
 `;
 

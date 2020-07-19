@@ -6,6 +6,7 @@ interface Flex {
     flex?: number;
     alignItems?: string;
     justifyContent?: string;
+    padding?: string;
 }
 
 const Flex = styled.div<Flex>`
@@ -14,6 +15,7 @@ const Flex = styled.div<Flex>`
     align-items: ${({alignItems}: {alignItems?: string}) => alignItems ?? 'flex-start'};
     justify-content: ${({justifyContent}: {justifyContent?: string}) =>
         justifyContent ?? 'flex-start'};
+        padding: ${({padding}:{padding?: string}) => padding||0};
 `;
 
 const Section = styled(Flex)`
@@ -35,10 +37,12 @@ const Row = styled(Flex)`
 
 const getFontSize = ({fontSize}: {fontSize: number}) => fontSize;
 const getFontWeight = ({fontWeight}: {fontWeight: number}) => fontWeight;
+const getColor = ({color}: {color?: string}) => color??'#000';
 
-const TextContainer = styled.span<{fontSize: number; fontWeight: number}>`
+const TextContainer = styled.span<{fontSize: number; fontWeight: number; color?: string}>`
     font-size: ${getFontSize}px;
     font-weight: ${getFontWeight};
+    color: ${getColor};
 `;
 
 export {Section, FlexContainer, Row, TextContainer};

@@ -1,6 +1,16 @@
-import * as mondaySdk from 'monday-sdk-js';
+import mondaySdk from 'monday-sdk-js';
+const initMonday = ()=>{
+    try {
+        return mondaySdk();
+    }catch(e){
+        console.error(e);
+        return {
+            api:()=>Promise.resolve([])
+        }
+    }
+}
 
-const monday = mondaySdk();
+const monday = initMonday();
 
 class Monday {
     getInstance(){
@@ -8,6 +18,9 @@ class Monday {
     }
     api(query: string){
         return monday.api(query).then((res:{data: any}) => res.data)
+    }
+    get(val:string) {
+        return monday.get('context').then((res:{data: any}) => res.data);
     }
 }
 

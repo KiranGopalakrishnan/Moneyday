@@ -1,5 +1,9 @@
 import * as React from 'react';
 
+type RecursivePartial<T> = {
+    [P in keyof T]?: RecursivePartial<T[P]>;
+};
+
 interface Action<T> {
     type: T;
     payload: any;
@@ -9,7 +13,7 @@ const createStore = <T, P>(
     initialState: T
 ): [
     React.FC<{children: React.ReactNode; initial?: Partial<T>}>,
-    () => [T, ({type, payload}: {type: P; payload: Partial<T>}) => any]
+    () => [T, ({type, payload}: {type: P; payload: RecursivePartial<T>}) => any]
 ] => {
     const stateContext = React.createContext(null);
 
@@ -48,7 +52,7 @@ const createStore = <T, P>(
         );
     };
 
-    const useState = (): [T, ({type, payload}: {type: P; payload: Partial<T>}) => any] => [
+    const useState = (): [T, ({type, payload}: {type: P; payload: RecursivePartial<T>}) => any] => [
         useStateValue(),
         useDispatch(),
     ];

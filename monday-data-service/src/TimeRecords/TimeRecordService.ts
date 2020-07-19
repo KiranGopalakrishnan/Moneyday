@@ -1,77 +1,115 @@
-import { MongoClient } from 'mongodb'
-import { Monday } from '../monday/Monday'
+import { Monday } from '../Monday/Monday'
 import { saveTimeRecords } from './TimeRecordsRepository'
 import { v4 as uuidv4 } from 'uuid'
+import { Board } from '../types/Boards'
+import { TimeRecord, TimeRecordDocument } from '../types/TimeRecord'
+import { ActivityLog, ActivityLogData } from '../types/ActivityLog'
+import { PersonsAndTeamsDocument } from '../types/PersonsAndTeams'
+import { addDays, eachDayOfInterval, isSameDay, startOfDay, subDays } from 'date-fns'
 
-interface ColumnValue {
-    id: string
-    value: any
-    text: string
-}
-
-interface TimeRecord {
-    running: boolean
-    duration: number //in seconds
-    changed_at: string
-    itemId?: string
-}
-
-interface Items {
-    id: string
-    name: string
-    column_values: ColumnValue[]
-}
-
-interface Board {
-    name: string
-    items: Items[]
-}
-
-const getTimeRecordsFor = (boardId: string) => {
-    return new Monday().api(`query {
+const getTimeTrackingActivityLog = (columnId: string, boardId: string) => {
+    return new Monday()
+        .api(
+            `query {
   boards(ids: ${boardId}) {
-    name
-    items {
+    activity_logs(column_ids: [${columnId}]) {
+      event
+      data
+      user_id
       id
-      name
-      
-      column_values(ids: "time_tracking") {
-        id
-        value
-        text
-      }
     }
   }
-}`)
-}
-
-const parseTimeRecords = (items: Items[], boardId: string) =>
-    items
-        .flatMap((item) => [
-            [
-                ...item.column_values,
-                ...[{ item_id: item.id, id: uuidv4(), board_id: boardId }],
-            ],
-        ])
-        .flatMap(
-            ([columnValue, item]: [
-                ColumnValue,
-                { item_id: string; id: string; board_id: string }
-            ]) => {
-                if (!columnValue.value) return columnValue.value
-                const parsedValue: TimeRecord = JSON.parse(columnValue.value)
-                return { ...parsedValue, ...item }
-            }
+}`
         )
-        .filter(Boolean)
-
-const addRecordsForBoard = (boardId: string): Promise<any> => {
-    return getTimeRecordsFor(boardId)
-        .then((result: { boards: Board[] }) =>
-            parseTimeRecords(result.boards[0].items, boardId)
-        )
-        .then((timeRecords: TimeRecord[]) => saveTimeRecords(timeRecords))
+        .then(({ boards }: { boards: Board<any>[] }) => boards[0].activity_logs)
         .catch(console.error)
 }
 
-export { addRecordsForBoard }
+const parseTimeTrackingColumnActivity = (activityLogs: ActivityLog[]) => {
+    const logData: ActivityLogData<TimeRecord>[] = activityLogs.map(
+        (log: ActivityLog) => ({
+            ...JSON.parse(log.data),
+            ...{ id: log.id, user_id: log.user_id },
+        })
+    )
+    return logData
+        .map((data) =>
+            data.value?.duration
+                ? {
+                      duration: data.value?.duration,
+                      started_at: data.value?.startDate,
+                      ended_at:
+                          (data.value?.startDate ? data.value?.startDate : 0) +
+                          (data.value?.duration ?? 0),
+                      board_id: data.board_id,
+                      column_id: data.column_id,
+                      task_id: data.pulse_id,
+                      id: data.id,
+                      user_id: Number(data.user_id),
+                  }
+                : null
+        )
+        .filter(Boolean)
+}
+
+const splitTimeRecordsByDate = (timeRecords:{
+    duration: number;
+    started_at: number;
+    ended_at: number;
+    board_id: number;
+    column_id: string;
+    task_id: number;
+    id: string;
+    user_id: number;
+}[]) => {
+    const timerecordsByDate =  timeRecords.map(record => {
+        const start = new Date(record.started_at * 1000);
+        const end = new Date(record.ended_at * 1000);
+        if(isSameDay(start,end)){
+            return [{...record,...{timerecord_date:startOfDay(start).getTime()}}];
+        }
+        const nextDayOfStart = addDays(start, 1)
+        nextDayOfStart.setHours(0, 0, 0, 0)
+        const endDay = new Date(end)
+        endDay.setHours(0, 0, 0, 0)
+        const allDatesWithinRange = eachDayOfInterval({start,end});
+        const startDayTimeSpent =
+            nextDayOfStart.getTime() / 1000 - start.getTime() / 1000
+        const endDateTimeSpent = end.getTime() / 1000 - endDay.getTime() / 1000
+        allDatesWithinRange.shift()
+        allDatesWithinRange.pop()
+        const dateRangeTimerecords = allDatesWithinRange.map((date) => ({
+            ...record,
+            ...{ timerecord_date: date.getTime(), duration: 24 * 3600 },
+        }))
+        const startDayTimerecord = {
+            ...record,
+            ...{
+                timerecord_date: start.getTime(),
+                duration: startDayTimeSpent,
+            },
+        }
+        const endDayTimerecord = {
+            ...record,
+            ...{
+                timerecord_date: end.getTime(),
+                duration: endDateTimeSpent,
+            },
+        }
+        return [startDayTimerecord, ...dateRangeTimerecords, endDayTimerecord]
+    })
+
+    return timerecordsByDate.flatMap(records => records );
+}
+
+const addTimeRecordsForBoard = (
+    columnId: string,
+    boardId: string
+): Promise<TimeRecordDocument[]> =>
+    getTimeTrackingActivityLog(columnId, boardId)
+        .then(parseTimeTrackingColumnActivity)
+        .then(splitTimeRecordsByDate)
+        .then(saveTimeRecords)
+        .catch(console.error)
+
+export { addTimeRecordsForBoard }

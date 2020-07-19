@@ -5,6 +5,9 @@ import com.mongodb.client.FindIterable
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.InsertOneOptions
+import com.mongodb.client.model.ReplaceOptions
+import com.mongodb.client.model.UpdateOptions
 import org.bson.Document
 import org.bson.conversions.Bson
 import org.springframework.stereotype.Component
@@ -14,7 +17,9 @@ public class EntityCollectionImpl<T>(private val collectionName:String,private v
 
     override fun save(domain: T):Unit {
         try {
-            this.db.getCollection(this.collectionName).insertOne(mapper.toDocument(domain))
+            val document = mapper.toDocument(domain);
+            //TODO: Remove this hardcoded id string ,and possibly pass in document enum class to EntityCollection ? Maybe ?
+            this.db.getCollection(this.collectionName).replaceOne(Filters.eq("id",document.getString("id")),document, ReplaceOptions().upsert(true))
         }catch (exception:MongoWriteException){
             throw exception;
         }

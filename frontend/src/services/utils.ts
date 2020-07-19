@@ -1,2 +1,2 @@
-const projectorUrl = (url: string) => `rest/projector/${url}`;
-export {projectorUrl};
+const moneydayUrl = (url: string) => `/rest/projector/${url}`;
+export {moneydayUrl};

@@ -1,14 +1,12 @@
 package com.projector.common.mongo
 
+import com.mongodb.client.model.IndexOptions
 import com.mongodb.client.model.Indexes
+import com.projector.boards.respository.BoardDocument
+import com.projector.boards.respository.BoardsRepository
 import com.projector.timerecords.repository.TimeRecordDocument
 import com.projector.timerecords.repository.TimeRecordsRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.DependsOn
-import org.springframework.data.domain.Sort.Direction
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.index.Index
 import javax.annotation.PostConstruct
 
 
@@ -29,7 +27,11 @@ class MongoCollectionsConfig(
                 )
         timeRecordCollection.createIndex(
                 Indexes.ascending(TimeRecordDocument.BOARD_ID.key)
+
         )
+
+        val boardsCollection = db.getCollection(BoardsRepository.COLLECTION_NAME)
+        boardsCollection.createIndex(Indexes.ascending(BoardDocument.BOARD_ID.key), IndexOptions().unique(true))
 
     }
 }

@@ -27,11 +27,12 @@ const ButtonControl = styled.button<{
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    border: solid 2px ${getColor};
+    border: solid 1px ${getColor};
     boz-sizing: border-box;
     cursor: pointer;
     font-weight: bold;
     transition: all 1s;
+    font-weight: 100;
 
     &:hover {
         background: ${getHoverColor};

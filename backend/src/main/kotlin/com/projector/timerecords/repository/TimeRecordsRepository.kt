@@ -17,7 +17,7 @@ class TimeRecordsRepository(val collectionFactory: CollectionFactory) {
 
     private val entityCollection: EntityCollection<TimeRecord> = collectionFactory.create(COLLECTION_NAME, TimeRecordDocumentMapper)
 
-    fun getRecordsForBoard(boardId: String): List<TimeRecord>? {
+    fun getRecordsForBoard(boardId: Int): List<TimeRecord>? {
         return entityCollection.findAll(Filters.eq(TimeRecordDocument.BOARD_ID.key,boardId))
     }
 

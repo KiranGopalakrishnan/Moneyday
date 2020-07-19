@@ -6,9 +6,10 @@
     "scripts": {
         "tsc": "tsc",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "server": "node build/server.js",
+        "server": "TZ='UTC' node build/server.js",
         "dev": "nodemon",
-        "lint": "npx eslint . --ext .ts --fix"
+        "lint": "npx eslint . --ext .ts --fix",
+        "prettier": "npx prettier . --write"
     },
     "keywords": [],
     "author": "",
@@ -21,6 +22,7 @@
         "@types/morgan": "1.9.1",
         "body-parser": "1.19.0",
         "cors": "2.8.5",
+        "date-fns": "2.14.0",
         "express": "4.17.1",
         "helmet": "3.23.3",
         "monday-sdk-js": "0.1.0",

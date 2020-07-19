@@ -12,15 +12,14 @@ import javax.ws.rs.core.MediaType
 
 data class TimeRecordsWrapperBean(val timerecords: List<TimeRecordBean>);
 
-@Path("/timerecords")
+@Path("/boards/{boardId}/timerecords")
 class TimeRecordsResource {
     @Autowired
     lateinit var timeRecordService: TimeRecordService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/boards/{boardId}")
-    fun getTimeRecordsForBoard(@PathParam("boardId") boardId:String): TimeRecordsWrapperBean {
+    fun getTimeRecordsForBoard(@PathParam("boardId") boardId:Int): TimeRecordsWrapperBean {
         return timeRecordService.getAllTimeRecordsForBoard(boardId).transformOrThrow {
             TimeRecordsWrapperBean(
                     timerecords = this.map { TimeRecordBean.from(it) }
@@ -30,7 +29,7 @@ class TimeRecordsResource {
     }
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/boards/{boardId}/items/{itemId}")
+    @Path("/items/{itemId}")
     fun getTimeRecordsForItem(
             @PathParam("boardId") boardId:String,
             @PathParam("itemId") itemId:String

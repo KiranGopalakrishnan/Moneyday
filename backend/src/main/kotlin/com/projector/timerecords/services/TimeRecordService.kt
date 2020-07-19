@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 @Service
 class TimeRecordService(val timeRecordsRepository: TimeRecordsRepository) {
 
-    fun getAllTimeRecordsForBoard(boardId: String): Response<List<TimeRecord>> {
+    fun getAllTimeRecordsForBoard(boardId: Int): Response<List<TimeRecord>> {
         val records = timeRecordsRepository.getRecordsForBoard(boardId)
         return if(records != null){
             Success(records)

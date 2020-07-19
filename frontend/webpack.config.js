@@ -32,6 +32,10 @@ module.exports = {
                 test: /\.js$/,
                 loader: 'source-map-loader',
             },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
         ],
     },
     devServer: {
@@ -43,7 +47,7 @@ module.exports = {
         compress: true,
         proxy: {
             '/rest': 'http://localhost:7000',
-            '/**': {
+            '**': {
                 target: 'https://localhost:3000/',
                 secure: true,
                 headers: {

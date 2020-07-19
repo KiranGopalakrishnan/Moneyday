@@ -1,13 +1,15 @@
 package com.projector.timerecords.modals
 
 import com.projector.common.modals.Id
-import java.time.LocalDate
+import com.projector.common.modals.NumberId
 
 data class TimeRecord(
         val id: Id,
-        val boardId: Id,
-        val startDate: LocalDate?,
+        val userId: NumberId,
+        val boardId: NumberId,
+        val taskId: NumberId,
+        val startDate: Int,
+        val endDate: Int,
         val duration: Int,
-        val changedAt: LocalDate?,
-        val itemId: Id
+        val timeRecordDate: Double
 )

@@ -4,10 +4,25 @@ import styled from 'styled-components';
 const getHeight = ({height}: {height: number}) => height;
 const getWidth = ({width}: {width: number}) => (width ? `${width}px` : '100%');
 const getColor = ({color}: {color: string}) => color;
-const getFocusedColor = ({focused, color}: {focused: boolean; color: string}) =>
-    focused ? color : '#E1E1E1';
+const getFocusedColor = ({
+    focused,
+    color,
+    invisible,
+}: {
+    focused: boolean;
+    color: string;
+    invisible: boolean;
+}) => (focused && !invisible ? color : invisible?'#FFF':'#E1E1E1');
+const getFontsize = ({fontSize}:{fontSize: number}) => `${fontSize}px`;
+const getTextAlign = ({textAlign}: {textAlign?: string}) => `${textAlign}`;
 
-const Container = styled.div<{height: number; width: number; color: string; focused: boolean}>`
+const Container = styled.div<{
+    height: number;
+    width: number;
+    color: string;
+    focused: boolean;
+    invisible: boolean;
+}>`
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -21,18 +36,28 @@ const Container = styled.div<{height: number; width: number; color: string; focu
     transition: all 1s linear;
 `;
 
-const Input = styled.input<{height: number; width: number; color: string}>`
+const Input = styled.input<{
+    height: number;
+    width: number;
+    color: string;
+    fontSize: number;
+    invisible: boolean;
+    textAlign: string;
+}>`
+    font-family: 'Roboto',sans-serif;
     display: flex;
     flex-direction: column;
     padding: 4px 8px;
     box-sizing: border-box;
     width: ${getWidth};
     color: #333;
-    font-weight: 200;
+    font-weight: 100;
     background: transparent;
     border: none;
     flex: 1;
     width: 100%;
+    font-size: ${getFontsize};
+    text-align: ${getTextAlign};
 
     &:focus {
         outline: none;
@@ -62,6 +87,9 @@ interface Props {
     type?: string;
     label: string;
     color: string;
+    fontSize?: number;
+    invisible?: boolean;
+    textAlign?: string;
 }
 
 const InputBox: React.FC<Props> = ({
@@ -73,11 +101,15 @@ const InputBox: React.FC<Props> = ({
     type,
     label,
     color,
+    fontSize,
+    invisible,
+    textAlign,
 }: Props) => {
+    
     const [isFocused, setIsFocused] = React.useState(false);
 
     return (
-        <Container height={height} width={width} color={color} focused={isFocused}>
+        <Container height={height} width={width} color={color} focused={isFocused} invisible={invisible}>
             <Input
                 height={height}
                 type={type}
@@ -88,6 +120,9 @@ const InputBox: React.FC<Props> = ({
                 color={color}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
+                fontSize={fontSize}
+                invisible={invisible}
+                textAlign={textAlign}
             />
             <span />
         </Container>
@@ -98,6 +133,9 @@ InputBox.defaultProps = {
     height: 40,
     placeholder: undefined,
     type: 'text',
+    fontSize: 16,
+    invisible: false,
+    textAlign: "left",
 };
 
 export {InputBox};

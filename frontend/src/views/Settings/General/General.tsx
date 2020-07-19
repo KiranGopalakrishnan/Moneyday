@@ -7,9 +7,10 @@ import { colors } from '../../../common/Colors';
 import { InputBox } from '../../../common/components/InputBox/InputBox';
 import Switch from 'react-switch';
 import { Select } from '../../../common/components/Select/Select';
-import { useBoards } from '../../../reducers/BoardsReducer';
-import { getAllColumnsForBoard, getAllTimeRecords } from '../../../services/Boards';
+import { useCurrentBoard } from '../../../reducers/CurrentBoardReducer';
+import { getAllColumnsForBoard } from '../../../services/Boards';
 import { Board } from '../../../types';
+import { DateRangePicker, DISPLAY_DATE_FORMAT } from '../../../common/components/DateRangePicker/DateRangePicker';
 
 const Container = styled(FlexContainer)`
     padding: 32px;
@@ -47,12 +48,20 @@ const SettingRow = styled(Row)`
 
 const General: React.FC = () => {
 
-    const [{currentBoard}] = useBoards();
+    const [{currentBoard}] = useCurrentBoard();
     const [timetracking,setTimetracking] =  React.useState(false);
     const [columns,setColumns] =  React.useState([]);
+    const [budget,setBudget] = React.useState(currentBoard?.budget);
+
+     const [{startDate,endDate},setTimeframe] = React.useState({
+        startDate: new Date(currentBoard?.timeframe?.startDate)??new Date(),
+        endDate:  new Date(currentBoard?.timeframe?.endDate)??new Date()
+    });
+
+
+    console.error({startDate,endDate});
 
     React.useEffect(()=>{
-        getAllTimeRecords(currentBoard.id).then(console.error);
         getAllColumnsForBoard(currentBoard.id).then(({boards}:{boards:Board[]})=>{
             setColumns(boards[0].columns);
         });
@@ -65,11 +74,23 @@ const General: React.FC = () => {
                     <Label>Budget</Label>
                     <Control width={300}>
                         <InputBox
-                            value={undefined}
+                            value={budget.toString()}
                             onChange={console.error}
                             label="Budget"
                             color={colors.GREY[900]}
                             placeholder="Budget"
+                        />
+                    </Control>
+                </SettingRow>
+                <SettingRow>
+                    <Label>Timeframe</Label>
+                    <Control width={320}>
+                        <DateRangePicker
+                            startDate={startDate}
+                            endDate={endDate}
+                            onChange={({startDate, endDate}) => {
+                                setTimeframe({startDate, endDate});
+                            }}
                         />
                     </Control>
                 </SettingRow>
@@ -86,7 +107,14 @@ const General: React.FC = () => {
                 <SettingRow>
                     <Label>Select column to track time from</Label>
                     <Control width={300}>
-                        <Select options={columns.map(column => ({value:column.id,label: column.title}))} onChange={console.error} width={300} />
+                        <Select
+                            options={columns.map((column) => ({
+                                value: column.id,
+                                label: column.title,
+                            }))}
+                            onChange={console.error}
+                            width={300}
+                        />
                     </Control>
                 </SettingRow>
             </Section>

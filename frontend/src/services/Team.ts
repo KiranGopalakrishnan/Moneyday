@@ -1,7 +1,7 @@
 import { Monday } from "../common/ecosystem/Monday";
 
 
-const getAllUsers = (boardId: string) => {
+const getAllUsers = (boardId: number) => {
     return new Monday().api(`query {
 boards (ids: ${boardId}) {
 subscribers {

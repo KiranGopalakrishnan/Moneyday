@@ -1,14 +1,14 @@
 import {Monday} from '../common/ecosystem/Monday';
 import { get, post } from '../api/Api';
 import { Expense } from '../types';
-import { projectorUrl } from './utils';
+import {moneydayUrl} from './utils';
 
 const getAllExpenses = () => {
-    return get<{expenses:Expense[]}>(projectorUrl​​('expenses'),{});
+    return get<{expenses: Expense[]}>(moneydayUrl('expenses'), {});
 };
 
 const addExpense = (expense: Expense) => {
-    return post<Expense>(projectorUrl('expenses'), {});
+    return post<Expense>(moneydayUrl('expenses'), {});
 };
 
 export {getAllExpenses, addExpense};

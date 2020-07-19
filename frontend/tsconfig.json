@@ -3,6 +3,7 @@
         "outDir": "./static/build/",
         "sourceMap": true,
         "noImplicitAny": false,
+        "esModuleInterop": true,
         "module": "commonjs",
         "target": "es6",
         "jsx": "react"

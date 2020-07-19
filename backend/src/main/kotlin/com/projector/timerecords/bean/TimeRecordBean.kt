@@ -4,17 +4,25 @@ import com.projector.timerecords.modals.TimeRecord
 
 data class TimeRecordBean(
         val id: String,
-        val boardId: String,
-        val itemId: String,
-        val duration: Int
+        val userId: Int,
+        val boardId: Int,
+        val taskId: Int,
+        val duration: Int,
+        val startDate: Int,
+        val endDate: Int,
+        val timeRecordDate: Double
 ){
     companion object{
         fun from(timeRecord: TimeRecord): TimeRecordBean {
             return TimeRecordBean(
                     id = timeRecord.id.value,
+                    userId = timeRecord.userId.value,
                     boardId = timeRecord.boardId.value,
-                    itemId = timeRecord.itemId.value,
-                    duration = timeRecord.duration
+                    taskId = timeRecord.taskId.value,
+                    duration = timeRecord.duration,
+                    startDate = timeRecord.startDate,
+                    endDate = timeRecord.endDate,
+                    timeRecordDate = timeRecord.timeRecordDate
             )
         }
     }

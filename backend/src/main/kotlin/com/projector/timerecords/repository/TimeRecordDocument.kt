@@ -5,8 +5,11 @@ enum class TimeRecordDocument(val key: String) {
     ID("id"),
     BOARD_ID("board_id"),
     DURATION("duration"),
-    ITEM_ID("item_id"),
+    ITEM_ID("task_id"),
     RUNNING("running"),
-    STARTDATE("startDate"),
-    CHANGEDAT("changed_at")
+    STARTED_AT("started_at"),
+    ENDED_AT("ended_at"),
+    TASK_ID("task_id"),
+    USER_ID("user_id"),
+    TIMERECORD_DATE("timerecord_date")
 }

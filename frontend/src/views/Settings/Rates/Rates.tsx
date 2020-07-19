@@ -7,7 +7,7 @@ import {Link, useRouteMatch, Switch, Route} from 'react-router-dom';
 import {colors} from '../../../common/Colors';
 import {InputBox} from '../../../common/components/InputBox/InputBox';
 import { getAllUsers } from '../../../services/Team';
-import { useBoards } from '../../../reducers/BoardsReducer';
+import { useCurrentBoard } from '../../../reducers/CurrentBoardReducer';
 import { useTeam, TeamActions } from '../../../reducers/TeamReducer';
 import Avatar from 'react-avatar';
 
@@ -65,12 +65,10 @@ const Header = styled(Row)`
 
 const Rates: React.FC = () => {
 
-    const[{currentBoard}] = useBoards();
+    const[{currentBoard}] = useCurrentBoard();
 
     const [team,dispatchTeam] =  useTeam();
-
-    console.error({currentBoard});
-
+    
     React.useEffect(()=>{
         getAllUsers(currentBoard.id).then(({boards})=>{
             dispatchTeam({type: TeamActions.SET_USERS,payload:{users:boards[0].subscribers}})

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {FlexContainer, Section} from '../../common/styles/Styles';
 import {Button} from '../../common/components/Button/Button';
 import {colors} from '../../common/Colors';
-import {useBoards, BoardsActions} from '../../reducers/BoardsReducer';
+import {useCurrentBoard, CurrentBoardActions} from '../../reducers/CurrentBoardReducer';
 import {ExpenseList} from './ExpenseList';
 import {Monday} from '../../common/ecosystem/Monday';
 import {getAllBoards} from '../../services/Boards';
