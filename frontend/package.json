@@ -43,7 +43,7 @@
     "@popperjs/core": "2.4.4",
     "@types/react-router-dom": "5.1.5",
     "@types/styled-components": "5.1.0",
-    "axios": "0.19.2",
+    "axios": "0.21.1",
     "currency.js": "1.2.2",
     "date-fns": "2.14.0",
     "monday-sdk-js": "0.1.0",
